@@ -4,8 +4,8 @@ const server = express();
 
 server.get("/api/users", (req, res) => {
   User.find()
-      .then(users => {
-        res.json(users)
+    .then((users) => {
+      res.json(users);
     })
     .catch((err) => {
       res.status(500).json({
@@ -18,11 +18,16 @@ server.get("/api/users", (req, res) => {
 server.get("/api/users/:id", (req, res) => {
   User.findById(req.params.id)
     .then((user) => {
-      res.json(user)
+      if (!user) {
+        res.status(404).json({
+          message: "The user with the specified ID does not exist",
+        });
+      }
+      res.json(user);
     })
     .catch((err) => {
-      res.status(500).json({
-        message: "error getting users",
+      res.status(404).json({
+        message: "error getting user",
         err: err.message,
       });
     });
